@@ -1,17 +1,14 @@
-# Python Template
-Use as a template for python repos.
+# Python Development Container
+Use as a template for python dev container.
 
-
-## Run the tests
-```bash
-python -m pytest
-```
-
+This will add some useful tools and shortcuts to the standard VSCode Python dev image.
 
 
 ## Using the Dockerfile to create an image
 
-Follwo these steps:
+We might want to do this to support additions & updates to the tools included in the container image.
+
+Follow these steps:
 
 ```
 # Find the docker file
