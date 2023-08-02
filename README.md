@@ -12,10 +12,10 @@ Follow these steps:
 
 ```
 # Find the docker file
-cd /.devcontainer
+cd .devcontainer
 
 # To build the image
-docker build -t phoughton/python-dev-main
+docker build -t phoughton/python-dev-main .
 
 # Login to existing account
 docker login
