@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/python:3.11-bookworm
+FROM mcr.microsoft.com/devcontainers/python:3.12-bookworm
 
 
 RUN echo 'alias ll="ls -lrta"'  >> ~vscode/.bashrc
