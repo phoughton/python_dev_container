@@ -10,4 +10,4 @@ RUN apt update && \
 
 RUN echo "banner 'Hello'" >>  ~vscode/.bashrc && \
     echo "date\necho 'Installed:'\n echo ' - hexyl'\necho ' - banner'\necho ' - ttyrec'" >> ~vscode/.bashrc && \
-    python --version
+    echo "python --version" >> ~vscode/.bashrc
