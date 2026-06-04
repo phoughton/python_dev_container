@@ -1,13 +1,31 @@
 FROM mcr.microsoft.com/devcontainers/python:3.13-trixie
 
+RUN echo 'alias ll="ls -lrta"' >> ~vscode/.bashrc
 
-RUN echo 'alias ll="ls -lrta"'  >> ~vscode/.bashrc
+RUN apt-get update && apt-get install -y \
+        hexyl sysvbanner ttyrec dnsutils \
+        nodejs npm jq miller \
+        x11-apps mesa-utils dbus-x11 libgl1-mesa-dri fonts-liberation \
+        chromium \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN apt update && \
-    apt install -y hexyl && \ 
-    apt install -y sysvbanner && \
-    apt install -y ttyrec
+# Install the CLIs AS vscode so they land in /home/vscode, not /root
+USER vscode
 
-RUN echo "banner 'Hello'" >>  ~vscode/.bashrc && \
-    echo "date\necho 'Installed:'\n echo ' - hexyl'\necho ' - banner'\necho ' - ttyrec'" >> ~vscode/.bashrc && \
-    echo "python --version" >> ~vscode/.bashrc
+# Put both install dirs on PATH explicitly — doesn't depend on any .bashrc
+# being sourced, or on $SHELL being set.
+ENV PATH="/home/vscode/.local/bin:/home/vscode/.opencode/bin:${PATH}"
+
+RUN curl -fsSL https://claude.ai/install.sh | bash && \
+    echo "Claude installed."
+
+# --no-modify-path skips the installer's shell-detection step, which is the
+# part that aborts under `set -u` when $SHELL is unset during the build.
+RUN curl -fsSL https://opencode.ai/install | bash -s -- --no-modify-path && \
+    echo "Opencode installed."
+
+RUN echo "echo 'Hello.'" >> ~/.bashrc && \
+    echo "date" >> ~/.bashrc && \
+    echo "python --version" >> ~/.bashrc && \
+    echo "cat /etc/os-release | tr '\n' ',' " >> ~/.bashrc && \
+    echo "uname -a" >> ~/.bashrc
