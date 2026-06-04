@@ -4,10 +4,14 @@ RUN echo 'alias ll="ls -lrta"' >> ~vscode/.bashrc
 
 RUN apt-get update && apt-get install -y \
         hexyl sysvbanner ttyrec dnsutils \
-        nodejs npm jq miller \
+        jq miller \
         x11-apps mesa-utils dbus-x11 libgl1-mesa-dri fonts-liberation \
         chromium \
     && rm -rf /var/lib/apt/lists/*
+
+RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - && \
+    apt-get install -y nodejs && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install the CLIs AS vscode so they land in /home/vscode, not /root
 USER vscode
