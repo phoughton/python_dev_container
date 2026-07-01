@@ -13,6 +13,25 @@ RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - && \
     apt-get install -y nodejs && \
     rm -rf /var/lib/apt/lists/*
 
+# --- Neovim (latest stable, multi-arch) ---
+ARG TARGETARCH
+RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates \
+ && case "${TARGETARCH:-$(dpkg --print-architecture)}" in \
+      amd64) ARCH=x86_64 ;; \
+      arm64) ARCH=arm64 ;; \
+      *) echo "unsupported arch: ${TARGETARCH:-unknown}" && exit 1 ;; \
+    esac \
+ && curl -fsSL "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-${ARCH}.tar.gz" -o /tmp/nvim.tar.gz \
+ && tar -xzf /tmp/nvim.tar.gz -C /opt \
+ && ln -s /opt/nvim-linux-${ARCH}/bin/nvim /usr/local/bin/nvim \
+ && rm /tmp/nvim.tar.gz \
+ && rm -rf /var/lib/apt/lists/*
+
+COPY init.lua /tmp/init.lua
+RUN mkdir -p /home/${USERNAME}/.config/nvim \
+ && cp /tmp/init.lua /home/${USERNAME}/.config/nvim/init.lua \
+ && chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}/.config
+
 # Install the CLIs AS vscode so they land in /home/vscode, not /root
 USER vscode
 
